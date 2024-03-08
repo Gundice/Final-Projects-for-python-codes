@@ -1,0 +1,94 @@
+import json
+to_do_list={}
+def add_task():
+    global to_do_list
+    task_name=input('what is the task you want to complete')
+    priority=input("is it high,medium or low priority?")
+    date=input("what is todays date")
+    status='pending'
+
+    task_details={'Task name':task_name,'Priority':priority,'Date created':date,'Status':status}
+    to_do_list[task_name]=task_details
+    print(to_do_list)
+
+
+def update_priority(task_name, new_priority):
+    global to_do_list
+    if task_name in to_do_list:
+        to_do_list[task_name]['Priority'] = new_priority
+        print(f"Priority of task '{task_name}' updated to '{new_priority}'.")
+    else:
+        print(f"Task '{task_name}' not found in the to-do list.")
+
+def delete_task(task_name):
+    global to_do_list
+    if task_name in to_do_list:
+        del to_do_list[task_name]
+        print(f"Task '{task_name}' deleted.")
+    else:
+        print(f"Task '{task_name}' not found in the to-do list.")
+
+def status (task_name):
+    global to_do_list
+    if task_name in to_do_list:
+        to_do_list[task_name]["Status"]='completed'
+        print(f"status of Task '{task_name}' changed to completed.")
+    else:
+        print(f"Task '{task_name}' not found in the to-do list.")
+
+def save_to_file(file_name='to_do_list.txt'):
+    global to_do_list
+    with open(file_name, 'w') as file:
+        json.dump(to_do_list, file)
+    print(f"To-do list saved to {file_name}.")
+
+def search(text_name):
+    global to_do_list
+    if text_name in to_do_list:
+        print(f"Task '{text_name}' found in the to-do list.")
+        details = to_do_list[text_name]
+        print(f"Details: {details}")
+    else:
+        print(f"Task '{text_name}' not found in the to-do list.")
+
+def display():
+    global to_do_list
+    print("To-Do List:")
+    for task_name, task_details in to_do_list.items():
+        print(f"Task: {task_name}, Priority: {task_details['Priority']}, Status: {task_details['Status']}")
+        
+while True:
+    print("1. Add Task")
+    print("2. Delete Task")
+    print("3. Update Priority")
+    print("4. Mark Task as Complete")
+    print("5. Save To-Do List")
+    print("6. Search Task")
+    print("7. Display To-Do List")
+    print("8. Exit")
+
+    choice = input('Enter your choice (1/2/3/4/5/6/7/8): ')
+
+    if choice == '1':
+        add_task()
+    elif choice == '2':
+        task_name_to_delete = input('Enter the task name to delete: ')
+        delete_task(task_name_to_delete)
+    elif choice == '3':
+        task_name_to_update = input('Enter the task name to update: ')
+        new_priority = input('Enter the new priority: ')
+        update_priority(task_name_to_update, new_priority)
+    elif choice == '4':
+        task_name_to_complete = input('Enter the task name to mark as complete: ')
+        status(task_name_to_complete)
+    elif choice == '5':
+        save_to_file()
+    elif choice == '6':
+        search_name = input('Enter the task name to search: ')
+        search(search_name)
+    elif choice == '7':
+        display()
+    elif choice == '8':
+        break
+    else:
+        print('Invalid choice. Please enter a number between 1 and 8.')
