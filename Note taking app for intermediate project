@@ -1,0 +1,109 @@
+import os
+
+def create_new_note():
+    note_title = input("Enter note title: ")
+    note_content = input("Enter note content: ")
+
+    note = {'title': note_title, 'content': note_content}
+    save_note_to_folder(note)  # Save the created note to the folder
+    print("Note created and saved successfully!")
+    return note
+
+def save_note_to_folder(note):
+    folder_path = 'notes'
+    file_path = os.path.join(folder_path, f"{note['title']}.txt")
+
+    with open(file_path, 'w') as file:
+        file.write(note['content'])
+
+def view_notes_list():
+    folder_path = 'notes'
+    notes_list = os.listdir(folder_path)
+    print("Available Notes:")
+    for note in notes_list:
+        print(note)
+
+def select_note_to_open():
+    view_notes_list()
+    selected_note = input("Enter the title of the note to open: ")
+    file_path = os.path.join('notes', f"{selected_note}.txt")
+
+    with open(file_path, 'r') as file:
+        note_content = file.read()
+        print(f"\nNote Title: {selected_note}")
+        print(f"Note Content:\n{note_content}")
+
+def delete_note():
+    view_notes_list()
+    note_to_delete = input("Enter the title of the note to delete: ")
+    file_path = os.path.join('notes', f"{note_to_delete}.txt")
+    if os.path.exists(file_path):
+        os.remove(file_path)
+        print(f"Note '{note_to_delete}' deleted.")
+    else:
+        print(f"Note '{note_to_delete}' not found.")
+
+def update_note():
+    view_notes_list()
+    note_to_update = input("Enter the title of the note to update: ")
+    file_path = os.path.join('notes', f"{note_to_update}.txt")
+
+    if os.path.exists(file_path):
+        with open(file_path, 'r') as file:
+            existing_content = file.read()
+            print(f"\nCurrent Note Content:\n{existing_content}")
+
+        new_content = input("Enter the updated note content: ")
+
+        with open(file_path, 'w') as file:
+            file.write(new_content)
+
+        print(f"Note '{note_to_update}' updated successfully.")
+    else:
+        print(f"Note '{note_to_update}' not found.")
+
+    
+
+def search_note():
+    search_query = input("Enter the title or part of the title to search for: ")
+    folder_path = 'notes'
+    notes_list = os.listdir(folder_path)
+
+    matching_notes = [note for note in notes_list if search_query.lower() in note.lower()]
+
+    if matching_notes:
+        print(f"Matching Notes:")
+        for note in matching_notes:
+            print(note)
+    else:
+        print("No matching notes found.")
+
+while True:
+    print("\nNote-Taking App Menu:")
+    print("1. Create New Note")
+    print("2. View Notes List")
+    print("3. Select Note to Open")
+    print("4. Update Note")
+    print("5. Delete Note")
+    print("6. Search for Note")
+    print("7. Exit")
+
+    choice = input('Enter your choice (1-7): ')
+
+    if choice == '1':
+        create_new_note()
+    elif choice == '2':
+        view_notes_list()
+    elif choice == '3':
+        select_note_to_open()
+    elif choice == '4':
+        update_note()
+    elif choice == '5':
+        delete_note()
+    elif choice == '6':
+        search_note()
+    elif choice == '7':
+        print("Exiting Note-Taking App. Goodbye!")
+        break
+    else:
+        print('Invalid choice. Please enter a number between 1 and 7.')
